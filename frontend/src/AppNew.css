@@ -1,0 +1,28 @@
+:root{
+    --primary-color: #f1faee;
+    --red-color: #e63946;
+    --light-color: #a8dadc;
+    --mid-color: #457b9d;
+    --dark-color: #1d3557;
+
+      /* Font family definitions */
+    --font-primary: 'Montserrat', sans-serif;
+    --font-secondary: 'Lora', serif;
+
+   
+}
+
+/* AppNew.css */
+.appContainer {
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+
+    overflow: scroll;
+    position: relative;
+}
+
+.game-world {
+    width: 100%;
+    height: 100%;
+}
