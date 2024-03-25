@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./app.css";
 import OnScreenKeyboard from "./Components/OnScreenKeyboard";
+import World from "./Components/World";
 
 const App = () => {
     const [typedName, setTypedName] = useState('');
@@ -21,14 +22,18 @@ const App = () => {
     }, []);
 
     return (
-        <div id="appContainer">
-            <div id="top">
-                <h1>{typedName}</h1>
-            </div>
-            <div id="bottom">
-                <OnScreenKeyboard />
-            </div>
-        </div>
+        // <div id="appContainer">
+        //     <div id="top">
+        //         <h1>{typedName}</h1>
+        //     </div>
+        //     <div id="bottom">
+        //         <OnScreenKeyboard />
+        //     </div>
+
+
+
+        // </div>
+            <World />
     );
 };
 

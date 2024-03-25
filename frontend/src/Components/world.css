@@ -1,0 +1,14 @@
+#worldContainer {
+    position: relative;
+    width: 200vw; /* 5 times the viewport width */
+    height: 200vh; /* 5 times the viewport height */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden; /* hide scroll bars */
+}
+
+
+.worlds {
+    border: 1px solid black;
+}
