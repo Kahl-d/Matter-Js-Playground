@@ -1,0 +1,43 @@
+.keyboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    margin: 20px;
+  }
+  
+  .keyboard-input {
+    width: calc(100% - 40px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .keyboard-row {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .key {
+    user-select: none;
+    cursor: pointer;
+    margin: 5px;
+    border: none;
+    background-color: #f0f0f0;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 15px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .key.space {
+    width: 130px; /* Larger space key */
+  }
+  
+  .key:active {
+    background-color: #ddd; /* Immediate feedback for click */
+  }
+  
