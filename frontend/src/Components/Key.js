@@ -22,7 +22,17 @@ const Key = ({ label, handleKeyPress }) => {
       }
     };
 
-    const upHandler = () => setPressed.start({ scale: 1, boxShadow: '0px 3px 3px rgba(0, 0, 0, 0.2)' });
+    const upHandler = ({ key }) => {
+      let keyLabel = key;
+      if (key === ' ') keyLabel = 'space';
+      else if (key === 'Backspace') keyLabel = 'delete';
+      else if (key === 'Enter') keyLabel = 'return';
+      else keyLabel = key.toLowerCase();
+
+      if (keyLabel === label.toLowerCase()) {
+        setPressed.start({ scale: 1, boxShadow: '0px 3px 3px rgba(0, 0, 0, 0.2)' });
+      }
+    };
 
     window.addEventListener('keydown', downHandler);
     window.addEventListener('keyup', upHandler);
@@ -35,10 +45,6 @@ const Key = ({ label, handleKeyPress }) => {
 
   return (
     <animated.button
-      onMouseDown={() => setPressed.start({ scale: 0.95, boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.2)' })}
-      onMouseUp={() => setPressed.start({ scale: 1, boxShadow: '0px 3px 3px rgba(0, 0, 0, 0.2)' })}
-      onTouchStart={() => setPressed.start({ scale: 0.95, boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.2)' })}
-      onTouchEnd={() => setPressed.start({ scale: 1, boxShadow: '0px 3px 3px rgba(0, 0, 0, 0.2)' })}
       className={`key ${label}`}
       style={{
         transform: isPressed.scale.to(scale => `scale(${scale})`),

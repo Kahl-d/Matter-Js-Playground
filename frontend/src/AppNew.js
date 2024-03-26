@@ -1,17 +1,28 @@
-// App.js
+// AppNew.js
 import React from "react";
-import GameComponent from "./Main/GameComponent"; // This now controls only the ball
-import Home from "./Main/Home";
-import './AppNew.css'; // Make sure you have an App.css for global styles
+import { GameProvider } from "./Main/GameContext";
+import GameComponent from "./Main/GameComponent";
+import Home1 from "./Main/Home"; 
+import Home2 from "./Main/Home2"; 
+import './AppNew.css'; 
 
 const AppNew = () => {
+    const initializeObstacles = (engine) => {
+        // Define and add obstacles here using Matter.js functions
+        // e.g., Matter.World.add(engine.world, [obstacle]);
+    };
+
     return (
-        <div className="appContainer">
-            <GameComponent />
-            <Home id="home1" /> {/* First instance */}
-            <Home id="home2" /> {/* Second instance, simulating multiple sections */}
-            {/* Add more sections as needed */}
-        </div>
+        <GameProvider initializeObstacles={initializeObstacles}>
+            <div className="appContainer">
+                <GameComponent />
+                <div className="homeContainer">
+                    <Home1 />
+                    <Home2 />
+                    {/* Additional home components as needed */}
+                </div>
+            </div>
+        </GameProvider>
     );
 };
 

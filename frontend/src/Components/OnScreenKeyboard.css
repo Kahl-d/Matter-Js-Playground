@@ -3,12 +3,12 @@
     flex-direction: column;
     align-items: center;
     max-width: 100%;
-    margin: 20px;
+    
   }
   
   .keyboard-input {
     width: calc(100% - 40px);
-    margin-bottom: 20px;
+    
     padding: 10px;
     border: 2px solid #ccc;
     border-radius: 5px;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './OnScreenKeyboard.css';
-import Key from './Key'; // Assume Key is in a separate file or adjust import based on your structure
+import Key from './Key'; // Import the Key component from its file
 
 const OnScreenKeyboard = () => {
   const [inputValue, setInputValue] = useState("");
@@ -26,7 +26,7 @@ const OnScreenKeyboard = () => {
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'return'],
     ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'shift'],
-    ['ctrl', 'alt', 'cmd', 'space', 'cmd', 'alt']
+    ['ctrl', 'alt', 'cmd', 'space', 'cmd2', 'alt2'] // Changed 'cmd' to 'cmd2' and 'alt' to 'alt2'
   ];
 
   return (
@@ -38,10 +38,10 @@ const OnScreenKeyboard = () => {
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Type here or use the keyboard below..."
       />
-      {keyboardLayout.map((row, index) => (
-        <div key={index} className="keyboard-row">
-          {row.map(key => (
-            <Key key={key} label={key} handleKeyPress={handleKeyPress} />
+      {keyboardLayout.map((row, rowIndex) => (
+        <div key={rowIndex} className="keyboard-row">
+          {row.map((key, keyIndex) => (
+            <Key key={`${rowIndex}-${keyIndex}`} label={key} handleKeyPress={handleKeyPress} />
           ))}
         </div>
       ))}

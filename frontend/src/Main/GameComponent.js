@@ -1,90 +1,92 @@
+// GameComponent.js
 import React, { useEffect, useRef } from 'react';
+import { useGameContext } from './GameContext';
 import Matter from 'matter-js';
-import './Game.css';
 
 const GameComponent = () => {
-    const worldRef = useRef(null);
+    const gameRef = useRef(null);
+    const { engine } = useGameContext();
 
     useEffect(() => {
-        if (!worldRef.current) return;
+        // Clear the render area on reinitialization
+        gameRef.current.innerHTML = "";
 
-        // Engine setup
-        const engine = Matter.Engine.create();
-        engine.world.gravity.y = 1; // Default gravity
+        // Correctly import and use Engine, Runner, Render, Bodies, Body, Events, and Composite from Matter
+        const { Runner, Render, Bodies, Body, Events, Composite } = Matter;
 
-        const render = Matter.Render.create({
-            element: worldRef.current,
+        // Setup renderer
+        const render = Render.create({
+            element: gameRef.current,
             engine: engine,
             options: {
                 width: document.documentElement.clientWidth,
-                height: document.documentElement.clientHeight - 10,
+                height: document.documentElement.clientHeight,
                 wireframes: false,
                 background: 'transparent',
             },
         });
 
-        // Ball setup
-        const ball = Matter.Bodies.circle(50, 100, 20, {
-            restitution: 0.5, // Makes the ball bouncy
+        // Add ball
+        const ball = Bodies.circle(100, render.options.height / 2, 20, {
+            restitution: 0.5,
             friction: 0.05,
-            density: 0.01,
+            label: 'ball',
         });
 
-        // Ground setup
-        const ground = Matter.Bodies.rectangle(
-            render.options.width / 2,
-            render.options.height,
-            render.options.width,
-            20,
-            { isStatic: true }
-        );
+        // Add obstacles
+        const floor = Bodies.rectangle(render.options.width / 2, render.options.height, render.options.width, 20, { isStatic: true });
+        const obstacle1 = Bodies.rectangle(render.options.width * 1.5, render.options.height - 100, 200, 20, { isStatic: true });
 
-        // Walls to keep the ball in
-        const leftWall = Matter.Bodies.rectangle(0, render.options.height / 2, 20, render.options.height, { isStatic: true });
-        const rightWall = Matter.Bodies.rectangle(render.options.width, render.options.height / 2, 20, render.options.height, { isStatic: true });
+        Composite.add(engine.world, [ball, floor, obstacle1]);
 
-        Matter.World.add(engine.world, [ball, ground, leftWall, rightWall]);
-
-        Matter.Engine.run(engine);
-        Matter.Render.run(render);
-
-        const controlBall = (event) => {
-            const forceMagnitude = 0.05;
-            const jumpForce = -0.5;
-            event.preventDefault();
+        // Keydown event for applying forces to the ball
+        const handleKeydown = (event) => {
+            const force = 0.05;
             switch (event.keyCode) {
-                case 39: // Right
-                    Matter.Body.applyForce(ball, ball.position, { x: forceMagnitude, y: 0 });
+                case 37: // Left arrow
+                    Body.setVelocity(ball, { x: ball.velocity.x - force, y: ball.velocity.y });
                     break;
-                case 37: // Left
-                    Matter.Body.applyForce(ball, ball.position, { x: -forceMagnitude, y: 0 });
+                case 39: // Right arrow
+                    Body.setVelocity(ball, { x: ball.velocity.x + force, y: ball.velocity.y });
                     break;
-                case 38: // Up, used for testing, can be removed
-                    Matter.Body.applyForce(ball, ball.position, { x: 0, y: jumpForce });
-                    break;
-                case 40: // Down, can be used to increase gravity momentarily
-                    engine.world.gravity.y = 2;
-                    setTimeout(() => engine.world.gravity.y = 1, 100);
-                    break;
-                case 32: // Space - Jump
-                    if (Math.abs(ball.velocity.y) < 0.05) { // Prevents double jump
-                        Matter.Body.applyForce(ball, ball.position, { x: 0, y: jumpForce });
+                case 38: // Up arrow
+                    if (ball.position.y >= render.options.height - 40) { // Simple jump check
+                        Body.setVelocity(ball, { x: ball.velocity.x, y: ball.velocity.y - force * 5 });
                     }
+                    break;
+                default:
+                    // It's a good practice to have a default case, even if it does nothing
                     break;
             }
         };
 
-        document.addEventListener('keydown', controlBall);
+        document.addEventListener('keydown', handleKeydown);
+
+        // Scroll the screen based on the ball's position
+        Events.on(engine, 'afterUpdate', () => {
+            if (ball.position.x > window.innerWidth / 2) {
+                window.scrollTo({
+                    left: ball.position.x - window.innerWidth / 2,
+                    behavior: 'smooth',
+                });
+            }
+        });
+
+        // Use Runner instead of Engine.run based on the Matter.js deprecation warning
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+        Render.run(render);
 
         return () => {
-            document.removeEventListener('keydown', controlBall);
-            Matter.Engine.clear(engine);
-            Matter.Render.stop(render);
+            document.removeEventListener('keydown', handleKeydown);
+            Render.stop(render);
+            Composite.clear(engine.world);
+            Runner.stop(runner);
             render.canvas.remove();
         };
-    }, []);
+    }, [engine]); // Ensure re-initialization only if the engine changes
 
-    return <div ref={worldRef} className="game-world"></div>;
+    return <div ref={gameRef} className="game-overlay"></div>;
 };
 
 export default GameComponent;
